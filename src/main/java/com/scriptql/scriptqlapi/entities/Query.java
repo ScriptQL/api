@@ -1,19 +1,19 @@
-package com.scriptql.scriptqlapi.utils.entities;
+package com.scriptql.scriptqlapi.entities;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Entity
-@Table(name = "query")
-public class Query extends AbstractEntity {
+@Table(name = "querys")
+public class Query implements IEntity {
+
+    @Id
+    private long id;
 
     @NotEmpty
     private String query;

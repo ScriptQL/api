@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public abstract class AbstractController<T extends IEntity> {
 
-    private final AbstractService<T> service;
+    protected final AbstractService<T> service;
 
     @GetMapping()
     public List<T> list() {
