@@ -1,7 +1,7 @@
 package com.scriptql.scriptqlapi.controllers;
 
 import com.scriptql.scriptqlapi.services.AbstractService;
-import com.scriptql.scriptqlapi.utils.entities.AbstractEntity;
+import com.scriptql.scriptqlapi.entities.IEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public abstract class AbstractController<T extends AbstractEntity> {
+public abstract class AbstractController<T extends IEntity> {
 
     private final AbstractService<T> service;
 

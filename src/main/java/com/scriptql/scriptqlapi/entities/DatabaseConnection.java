@@ -1,18 +1,17 @@
-package com.scriptql.scriptqlapi.utils.entities;
+package com.scriptql.scriptqlapi.entities;
 
 import com.scriptql.scriptqlapi.enums.DatabaseDriver;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "database_connection")
-public class DatabaseConnection extends AbstractEntity {
+@Table(name = "database_connections")
+public class DatabaseConnection implements IEntity {
 
+    @Id
+    private long id;
     private String host;
     private String database;
     private String username;

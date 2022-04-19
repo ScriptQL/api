@@ -1,24 +1,22 @@
 package com.scriptql.scriptqlapi.services;
 
-import com.scriptql.scriptqlapi.utils.entities.AbstractEntity;
+import com.scriptql.scriptqlapi.entities.IEntity;
 import com.scriptql.scriptqlapi.repositories.AbstractRepository;
 import com.scriptql.scriptqlapi.utils.Snowflake;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public abstract class AbstractService<T extends AbstractEntity> {
+public abstract class AbstractService<T extends IEntity> {
 
     protected final AbstractRepository<T> repository;
     protected final Snowflake snowflake;
 
     public T create(T entity) {
         entity.setId(snowflake.next());
-        entity.setCreationDate(LocalDateTime.now());
         this.validate(entity);
         return repository.save(entity);
     }
