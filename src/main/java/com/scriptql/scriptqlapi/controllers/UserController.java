@@ -1,7 +1,7 @@
 package com.scriptql.scriptqlapi.controllers;
 
 import com.scriptql.scriptqlapi.services.UserService;
-import com.scriptql.scriptqlapi.utils.entities.User;
+import com.scriptql.scriptqlapi.entities.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
