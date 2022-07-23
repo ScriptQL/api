@@ -6,16 +6,19 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Data
-@Table(name = "database_connection")
 @Entity
-public class DatabaseConnection {
+@Table(name = "database_connections")
+public class DatabaseConnection implements IEntity {
+
     @Id
     private long id;
     private String host;
     private String database;
     private String username;
     private String password;
+    private int port;
+
     @Enumerated(EnumType.STRING)
     private DatabaseDriver driver;
-    private int port;
+
 }
