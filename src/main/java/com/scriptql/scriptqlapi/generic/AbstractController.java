@@ -1,7 +1,5 @@
-package com.scriptql.scriptqlapi.controllers;
+package com.scriptql.scriptqlapi.generic;
 
-import com.scriptql.scriptqlapi.services.AbstractService;
-import com.scriptql.scriptqlapi.entities.IEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

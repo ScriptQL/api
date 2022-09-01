@@ -1,5 +1,6 @@
 package com.scriptql.scriptqlapi.entities;
 
+import com.scriptql.scriptqlapi.generic.IEntity;
 import lombok.Data;
 
 import javax.persistence.Entity;

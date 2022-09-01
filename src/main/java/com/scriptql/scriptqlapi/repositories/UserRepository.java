@@ -1,6 +1,7 @@
 package com.scriptql.scriptqlapi.repositories;
 
 import com.scriptql.scriptqlapi.entities.User;
+import com.scriptql.scriptqlapi.generic.AbstractRepository;
 
 import java.util.Optional;
 

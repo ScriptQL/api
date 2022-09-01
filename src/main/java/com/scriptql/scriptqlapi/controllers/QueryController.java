@@ -1,6 +1,7 @@
 package com.scriptql.scriptqlapi.controllers;
 
 import com.scriptql.scriptqlapi.entities.Query;
+import com.scriptql.scriptqlapi.generic.AbstractController;
 import com.scriptql.scriptqlapi.services.QueryService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,9 +12,9 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/query")
-public class QuerryController extends AbstractController<Query> {
+public class QueryController extends AbstractController<Query> {
 
-    public QuerryController(QueryService service) {
+    public QueryController(QueryService service) {
         super(service);
     }
 

@@ -1,4 +1,4 @@
-package com.scriptql.scriptqlapi.entities;
+package com.scriptql.scriptqlapi.generic;
 
 public interface IEntity {
 

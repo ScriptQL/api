@@ -1,5 +1,6 @@
 package com.scriptql.scriptqlapi.entities;
 
+import com.scriptql.scriptqlapi.generic.IEntity;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "querys")
+@Table(name = "queries")
 public class Query implements IEntity {
 
     @Id
