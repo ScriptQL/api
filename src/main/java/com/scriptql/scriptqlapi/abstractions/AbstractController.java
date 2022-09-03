@@ -1,5 +1,6 @@
-package com.scriptql.scriptqlapi.generic;
+package com.scriptql.scriptqlapi.abstractions;
 
+import com.scriptql.scriptqlapi.interfaces.IEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

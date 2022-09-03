@@ -1,4 +1,4 @@
-package com.scriptql.scriptqlapi.generic;
+package com.scriptql.scriptqlapi.interfaces;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,12 +1,12 @@
 package com.scriptql.scriptqlapi.entities;
 
-import com.scriptql.scriptqlapi.generic.IEntity;
+import com.scriptql.scriptqlapi.interfaces.IEntity;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -17,16 +17,30 @@ public class Query implements IEntity {
     private long id;
 
     @NotEmpty
-    private String query;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @NotEmpty
     @ManyToOne
-    private User createdBy;
+    @JoinColumn(name = "database_id", nullable = false)
+    private DatabaseConnection database;
 
     @NotEmpty
-    @ManyToMany
-    private List<DatabaseConnection> connections;
+    private String query;
 
+    @NotEmpty
+    private String description;
+
+    @Column(name = "execution_date")
     private LocalDateTime executionDate;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "query")
+    private Set<QueryReview> queryReviews;
 }

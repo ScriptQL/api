@@ -1,5 +1,7 @@
-package com.scriptql.scriptqlapi.generic;
+package com.scriptql.scriptqlapi.abstractions;
 
+import com.scriptql.scriptqlapi.interfaces.AbstractRepository;
+import com.scriptql.scriptqlapi.interfaces.IEntity;
 import com.scriptql.scriptqlapi.utils.Snowflake;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

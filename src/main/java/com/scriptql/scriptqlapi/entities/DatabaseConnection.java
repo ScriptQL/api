@@ -1,11 +1,13 @@
 package com.scriptql.scriptqlapi.entities;
 
 import com.scriptql.scriptqlapi.enums.DatabaseDriver;
-import com.scriptql.scriptqlapi.generic.IEntity;
+import com.scriptql.scriptqlapi.interfaces.IEntity;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -30,7 +32,16 @@ public class DatabaseConnection implements IEntity {
     @NotEmpty
     private int port;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @Enumerated(EnumType.STRING)
     private DatabaseDriver driver;
+
+    @OneToMany(mappedBy = "database")
+    private List<Query> queries;
 
 }

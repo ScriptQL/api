@@ -1,7 +1,7 @@
 package com.scriptql.scriptqlapi.controllers;
 
 import com.scriptql.scriptqlapi.entities.Query;
-import com.scriptql.scriptqlapi.generic.AbstractController;
+import com.scriptql.scriptqlapi.abstractions.AbstractController;
 import com.scriptql.scriptqlapi.services.QueryService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;

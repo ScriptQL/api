@@ -1,7 +1,7 @@
 package com.scriptql.scriptqlapi.services;
 
 import com.scriptql.scriptqlapi.entities.User;
-import com.scriptql.scriptqlapi.generic.AbstractService;
+import com.scriptql.scriptqlapi.abstractions.AbstractService;
 import com.scriptql.scriptqlapi.repositories.UserRepository;
 import com.scriptql.scriptqlapi.utils.Snowflake;
 import org.springframework.security.crypto.bcrypt.BCrypt;
