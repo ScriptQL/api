@@ -1,7 +1,7 @@
 package com.scriptql.scriptqlapi.entities;
 
-import com.scriptql.scriptqlapi.interfaces.IEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -9,9 +9,10 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "queries")
-public class Query implements IEntity {
+public class Query {
 
     @Id
     private long id;

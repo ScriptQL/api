@@ -1,7 +1,7 @@
 package com.scriptql.scriptqlapi.repositories;
 
 import com.scriptql.scriptqlapi.entities.Query;
-import com.scriptql.scriptqlapi.interfaces.AbstractRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface QueryRepository extends AbstractRepository<Query> {
+public interface QueryRepository extends JpaRepository<Query, Long> {
 }

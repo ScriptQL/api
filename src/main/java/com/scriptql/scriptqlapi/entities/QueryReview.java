@@ -1,6 +1,5 @@
 package com.scriptql.scriptqlapi.entities;
 
-import com.scriptql.scriptqlapi.interfaces.IEntity;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "query_reviews")
-public class QueryReview implements IEntity {
+public class QueryReview {
 
     @Id
     private long id;

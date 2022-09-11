@@ -1,35 +1,32 @@
 package com.scriptql.scriptqlapi.entities;
 
 import com.scriptql.scriptqlapi.enums.DatabaseDriver;
-import com.scriptql.scriptqlapi.interfaces.IEntity;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "database_connections")
-public class DatabaseConnection implements IEntity {
+public class DatabaseConnection {
 
     @Id
     private long id;
 
-    @NotEmpty
+    private String name;
+
     private String host;
 
-    @NotEmpty
     private String database;
 
-    @NotEmpty
     private String username;
 
-    @NotEmpty
     private String password;
 
-    @NotEmpty
     private int port;
 
     @Column(name = "created_at")
@@ -42,6 +39,9 @@ public class DatabaseConnection implements IEntity {
     private DatabaseDriver driver;
 
     @OneToMany(mappedBy = "database")
-    private List<Query> queries;
+    private List<Query> queries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "databaseConnection")
+    private List<DatabaseConnectionReviewer> databaseConnectionReviewers = new ArrayList<>();
 
 }

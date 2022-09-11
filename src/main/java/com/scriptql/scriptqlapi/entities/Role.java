@@ -1,6 +1,5 @@
 package com.scriptql.scriptqlapi.entities;
 
-import com.scriptql.scriptqlapi.interfaces.IEntity;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -11,12 +10,13 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 @Data
-public class Role implements IEntity {
+public class Role {
 
     @Id
     private long id;
 
     @NotEmpty
+    @Column(unique = true)
     private String name;
 
     @Column(name = "created_at")

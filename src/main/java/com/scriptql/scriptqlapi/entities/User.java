@@ -1,7 +1,7 @@
 package com.scriptql.scriptqlapi.entities;
 
-import com.scriptql.scriptqlapi.interfaces.IEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -10,15 +10,16 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User implements IEntity {
+public class User {
 
     @Id
     private long id;
 
     @NotEmpty
-    private String login;
+    private String username;
 
     @NotEmpty
     private String name;
