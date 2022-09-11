@@ -4,6 +4,7 @@ import com.scriptql.scriptqlapi.enums.DatabaseDriver;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -21,5 +22,5 @@ public class DatabaseConnectionDTO {
     private String password;
     private int port;
     private DatabaseDriver driver;
-    private Set<String> roles;
+    private Set<String> roles = new HashSet<>();
 }

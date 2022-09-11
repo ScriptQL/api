@@ -5,8 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -25,7 +23,4 @@ public class Role {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
 }

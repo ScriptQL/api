@@ -1,5 +1,6 @@
 package com.scriptql.scriptqlapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ public class DatabaseConnectionReviewer {
 
     @ManyToOne
     @JoinColumn(name = "database_connection_id", nullable = false)
+    @JsonBackReference
     private DatabaseConnection databaseConnection;
 
     @ManyToOne

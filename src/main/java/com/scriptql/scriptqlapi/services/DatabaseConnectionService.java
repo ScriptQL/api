@@ -4,6 +4,7 @@ import com.scriptql.scriptqlapi.dto.DatabaseConnectionDTO;
 import com.scriptql.scriptqlapi.entities.DatabaseConnection;
 import com.scriptql.scriptqlapi.entities.DatabaseConnectionReviewer;
 import com.scriptql.scriptqlapi.repositories.DatabaseConnectionRepository;
+import com.scriptql.scriptqlapi.repositories.DatabaseConnectionReviewerRepository;
 import com.scriptql.scriptqlapi.repositories.RoleRepository;
 import com.scriptql.scriptqlapi.utils.Snowflake;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class DatabaseConnectionService {
 
     private DatabaseConnectionRepository repository;
+    private DatabaseConnectionReviewerRepository datababaseConnectionReviewerRepository;
     private RoleRepository roleRepository;
     private Snowflake snowflake;
 
@@ -38,15 +40,14 @@ public class DatabaseConnectionService {
         databaseConnection.setCreatedAt(momentLocalDate);
         databaseConnection.setUpdatedAt(momentLocalDate);
 
-        if (databaseConnectionDTO.getRoles() != null && !databaseConnectionDTO.getRoles().isEmpty()) {
-            var reviewers = getDatabaseConnectionReviewers(
-                    databaseConnection,
-                    databaseConnectionDTO.getRoles()
-            );
-            databaseConnection.setDatabaseConnectionReviewers(reviewers);
-        }
+        var reviewers = getDatabaseConnectionReviewers(
+                databaseConnection,
+                databaseConnectionDTO.getRoles()
+        );
 
         repository.save(databaseConnection);
+        datababaseConnectionReviewerRepository.saveAll(reviewers);
+        databaseConnection.setDatabaseConnectionReviewers(reviewers);
 
         return databaseConnection;
     }
@@ -64,6 +65,7 @@ public class DatabaseConnectionService {
 
                     if (optRole.isPresent()) {
                         var reviewer = new DatabaseConnectionReviewer();
+                        reviewer.setId(snowflake.next());
                         reviewer.setDatabaseConnection(databaseConnection);
                         reviewer.setRole(optRole.get());
                         reviewers.add(reviewer);
