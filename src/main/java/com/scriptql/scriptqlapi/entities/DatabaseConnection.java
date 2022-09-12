@@ -41,7 +41,7 @@ public class DatabaseConnection {
     @OneToMany(mappedBy = "database")
     private List<Query> queries = new ArrayList<>();
 
-    @OneToMany(mappedBy = "databaseConnection")
+    @OneToMany(mappedBy = "databaseConnection", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<DatabaseConnectionReviewer> databaseConnectionReviewers = new ArrayList<>();
 
 }

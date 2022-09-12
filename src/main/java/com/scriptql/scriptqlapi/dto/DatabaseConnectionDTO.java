@@ -1,5 +1,6 @@
 package com.scriptql.scriptqlapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.scriptql.scriptqlapi.enums.DatabaseDriver;
 import lombok.Data;
 
