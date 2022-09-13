@@ -3,6 +3,7 @@ package com.scriptql.scriptqlapi.services;
 import com.scriptql.scriptqlapi.dto.DatabaseConnectionDTO;
 import com.scriptql.scriptqlapi.entities.DatabaseConnection;
 import com.scriptql.scriptqlapi.entities.DatabaseConnectionReviewer;
+import com.scriptql.scriptqlapi.entities.Role;
 import com.scriptql.scriptqlapi.exceptions.DatabaseConnectionNotFoundException;
 import com.scriptql.scriptqlapi.repositories.DatabaseConnectionRepository;
 import com.scriptql.scriptqlapi.repositories.DatabaseConnectionReviewerRepository;
@@ -14,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -59,15 +62,21 @@ public class DatabaseConnectionService {
                     var optRole = roleRepository.findRoleByName(roleName);
 
                     if (optRole.isPresent()) {
-                        var reviewer = new DatabaseConnectionReviewer();
-                        reviewer.setId(snowflake.next());
-                        reviewer.setDatabaseConnection(databaseConnection);
-                        reviewer.setRole(optRole.get());
-                        reviewers.add(reviewer);
+                        reviewers.add(
+                                buildReviewerFromRoleAndConnection(databaseConnection, optRole.get())
+                        );
                     }
                 });
 
         return reviewers;
+    }
+
+    public DatabaseConnectionReviewer buildReviewerFromRoleAndConnection(DatabaseConnection db, Role role) {
+        var reviewer = new DatabaseConnectionReviewer();
+        reviewer.setId(snowflake.next());
+        reviewer.setDatabaseConnection(db);
+        reviewer.setRole(role);
+        return reviewer;
     }
 
     public List<DatabaseConnection> findAll() {
@@ -96,9 +105,20 @@ public class DatabaseConnectionService {
                     newDatabaseConnection.setId(databaseConnection.getId());
                     newDatabaseConnection.setUpdatedAt(LocalDateTime.now());
                     newDatabaseConnection.setCreatedAt(databaseConnection.getCreatedAt());
-                    repository.save(newDatabaseConnection);
+                    newDatabaseConnection.setDatabaseConnectionReviewers(Collections.emptyList());
 
-                    // @TODO: also update roles
+                    var newReviewers = new ArrayList<DatabaseConnectionReviewer>();
+                    roleRepository
+                            .findRolesByNameIn(databaseConnectionPayload.getRoles().stream().toList())
+                            .forEach(role -> {
+                                newReviewers.add(
+                                        buildReviewerFromRoleAndConnection(newDatabaseConnection, role)
+                                );
+                            });
+
+                    newDatabaseConnection.setDatabaseConnectionReviewers(newReviewers);
+                    repository.save(newDatabaseConnection);
+                    datababaseConnectionReviewerRepository.saveAll(newReviewers);
 
                     return databaseConnection;
                 })
