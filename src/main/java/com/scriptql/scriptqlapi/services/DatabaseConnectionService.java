@@ -1,50 +1,49 @@
 package com.scriptql.scriptqlapi.services;
 
-import com.scriptql.scriptqlapi.dto.DatabaseConnectionDTO;
-import com.scriptql.scriptqlapi.entities.DatabaseConnection;
-import com.scriptql.scriptqlapi.entities.DatabaseConnectionReviewer;
-import com.scriptql.scriptqlapi.entities.Role;
-import com.scriptql.scriptqlapi.exceptions.DatabaseConnectionNotFoundException;
-import com.scriptql.scriptqlapi.repositories.DatabaseConnectionRepository;
-import com.scriptql.scriptqlapi.repositories.DatabaseConnectionReviewerRepository;
-import com.scriptql.scriptqlapi.repositories.RoleRepository;
+import com.scriptql.scriptqlapi.rest.mappers.DatabaseConnectionMapper;
+import com.scriptql.scriptqlapi.domain.entities.DatabaseConnection;
+import com.scriptql.scriptqlapi.domain.entities.DatabaseConnectionReviewer;
+import com.scriptql.scriptqlapi.domain.entities.Role;
+import com.scriptql.scriptqlapi.rest.exceptions.DatabaseConnectionNotFoundException;
+import com.scriptql.scriptqlapi.domain.repositories.DatabaseConnectionRepository;
+import com.scriptql.scriptqlapi.domain.repositories.DatabaseConnectionReviewerRepository;
+import com.scriptql.scriptqlapi.domain.repositories.RoleRepository;
 import com.scriptql.scriptqlapi.utils.Snowflake;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
 public class DatabaseConnectionService {
 
     private DatabaseConnectionRepository repository;
-    private DatabaseConnectionReviewerRepository datababaseConnectionReviewerRepository;
+    private DatabaseConnectionReviewerRepository databaseConnectionReviewerRepository;
     private RoleRepository roleRepository;
     private Snowflake snowflake;
 
     @Transactional
-    public DatabaseConnection create(DatabaseConnectionDTO databaseConnectionDTO) {
-        var momentLocalDate = LocalDateTime.now();
-        var databaseConnection = buildDatabaseConnectionFromDto(databaseConnectionDTO);
+    public DatabaseConnection create(DatabaseConnectionMapper databaseConnectionMapper) {
+        var instant = Instant.now().getEpochSecond();
+        var databaseConnection = buildDatabaseConnectionFromMapper(databaseConnectionMapper);
 
         databaseConnection.setId(snowflake.next());
-        databaseConnection.setCreatedAt(momentLocalDate);
-        databaseConnection.setUpdatedAt(momentLocalDate);
+        databaseConnection.setCreatedAt(instant);
+        databaseConnection.setUpdatedAt(instant);
 
         var reviewers = getDatabaseConnectionReviewers(
                 databaseConnection,
-                databaseConnectionDTO.getRoles()
+                databaseConnectionMapper.getRoles()
         );
 
         repository.save(databaseConnection);
-        datababaseConnectionReviewerRepository.saveAll(reviewers);
+        databaseConnectionReviewerRepository.saveAll(reviewers);
         databaseConnection.setDatabaseConnectionReviewers(reviewers);
 
         return databaseConnection;
@@ -84,45 +83,41 @@ public class DatabaseConnectionService {
     }
 
     public DatabaseConnection findById(long id) {
-        return repository
-                .findById(id)
-                .map(databaseConnection -> {
-                    var reviewers = datababaseConnectionReviewerRepository.
-                            findDatabaseConnectionReviewerByDatabaseConnectionId(databaseConnection.getId());
+        var databaseConnection = repository.findById(id);
 
-                    databaseConnection.setDatabaseConnectionReviewers(reviewers);
-                    return databaseConnection;
-                })
-                .orElseThrow(DatabaseConnectionNotFoundException::new);
+        if (databaseConnection.isPresent()) {
+            var dbConn = databaseConnection.get();
+            var reviewers = databaseConnectionReviewerRepository.
+                    findDatabaseConnectionReviewerByDatabaseConnectionId(dbConn.getId());
+
+            dbConn.setDatabaseConnectionReviewers(reviewers);
+            return dbConn;
+        }
+
+        throw new DatabaseConnectionNotFoundException();
     }
 
     @Transactional
-    public void update(long id, DatabaseConnectionDTO databaseConnectionPayload) {
-        repository
-                .findById(id)
-                .map(databaseConnection -> {
-                    var newDatabaseConnection = buildDatabaseConnectionFromDto(databaseConnectionPayload);
-                    newDatabaseConnection.setId(databaseConnection.getId());
-                    newDatabaseConnection.setUpdatedAt(LocalDateTime.now());
-                    newDatabaseConnection.setCreatedAt(databaseConnection.getCreatedAt());
-                    newDatabaseConnection.setDatabaseConnectionReviewers(Collections.emptyList());
+    public void update(long id, DatabaseConnectionMapper databaseConnectionPayload) {
+        var databaseConnection = findById(id);
+        var newDatabaseConnection = buildDatabaseConnectionFromMapper(databaseConnectionPayload);
+        newDatabaseConnection.setId(databaseConnection.getId());
+        newDatabaseConnection.setUpdatedAt(Instant.now().getEpochSecond());
+        newDatabaseConnection.setCreatedAt(databaseConnection.getCreatedAt());
+        newDatabaseConnection.setDatabaseConnectionReviewers(Collections.emptyList());
 
-                    var newReviewers = new ArrayList<DatabaseConnectionReviewer>();
-                    roleRepository
-                            .findRolesByNameIn(databaseConnectionPayload.getRoles().stream().toList())
-                            .forEach(role -> {
-                                newReviewers.add(
-                                        buildReviewerFromRoleAndConnection(newDatabaseConnection, role)
-                                );
-                            });
+        var newReviewers = new ArrayList<DatabaseConnectionReviewer>();
+        roleRepository
+                .findRolesByNameIn(databaseConnectionPayload.getRoles().stream().toList())
+                .forEach(role -> {
+                    newReviewers.add(
+                            buildReviewerFromRoleAndConnection(newDatabaseConnection, role)
+                    );
+                });
 
-                    newDatabaseConnection.setDatabaseConnectionReviewers(newReviewers);
-                    repository.save(newDatabaseConnection);
-                    datababaseConnectionReviewerRepository.saveAll(newReviewers);
-
-                    return databaseConnection;
-                })
-                .orElseThrow(DatabaseConnectionNotFoundException::new);
+        newDatabaseConnection.setDatabaseConnectionReviewers(newReviewers);
+        repository.save(newDatabaseConnection);
+        databaseConnectionReviewerRepository.saveAll(newReviewers);
     }
 
     public void delete(long id) {
@@ -130,16 +125,16 @@ public class DatabaseConnectionService {
         repository.delete(databaseConnection);
     }
 
-    private DatabaseConnection buildDatabaseConnectionFromDto(DatabaseConnectionDTO databaseConnectionDTO) {
+    private DatabaseConnection buildDatabaseConnectionFromMapper(DatabaseConnectionMapper databaseConnectionMapper) {
         var databaseConnection = new DatabaseConnection();
 
-        databaseConnection.setName(databaseConnectionDTO.getName());
-        databaseConnection.setDatabase(databaseConnectionDTO.getDatabase());
-        databaseConnection.setUsername(databaseConnectionDTO.getUsername());
-        databaseConnection.setHost(databaseConnectionDTO.getHost());
-        databaseConnection.setPassword(databaseConnectionDTO.getPassword());
-        databaseConnection.setPort(databaseConnectionDTO.getPort());
-        databaseConnection.setDriver(databaseConnectionDTO.getDriver());
+        databaseConnection.setName(databaseConnectionMapper.getName());
+        databaseConnection.setDatabase(databaseConnectionMapper.getDatabase());
+        databaseConnection.setUsername(databaseConnectionMapper.getUsername());
+        databaseConnection.setHost(databaseConnectionMapper.getHost());
+        databaseConnection.setPassword(databaseConnectionMapper.getPassword());
+        databaseConnection.setPort(databaseConnectionMapper.getPort());
+        databaseConnection.setDriver(databaseConnectionMapper.getDriver());
 
         return databaseConnection;
     }
