@@ -3,6 +3,7 @@ package com.scriptql.scriptqlapi.services;
 import com.scriptql.scriptqlapi.domain.entities.Role;
 import com.scriptql.scriptqlapi.rest.exceptions.RoleNotFoundException;
 import com.scriptql.scriptqlapi.domain.repositories.RoleRepository;
+import com.scriptql.scriptqlapi.rest.mappers.request.RoleRequestMapper;
 import com.scriptql.scriptqlapi.utils.Snowflake;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ public class RoleService {
     private RoleRepository repository;
     private Snowflake snowflake;
 
-    public Role create(Role role) {
+    public Role create(RoleRequestMapper mapper) {
+        var role = new Role();
         var instant = Instant.now().getEpochSecond();
 
         role.setId(snowflake.next());
+        role.setName(mapper.getName());
         role.setCreatedAt(instant);
         role.setUpdatedAt(instant);
 

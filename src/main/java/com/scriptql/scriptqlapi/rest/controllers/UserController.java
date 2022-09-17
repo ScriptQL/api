@@ -1,7 +1,8 @@
 package com.scriptql.scriptqlapi.rest.controllers;
 
 import com.scriptql.scriptqlapi.domain.entities.User;
-import com.scriptql.scriptqlapi.rest.mappers.UserMapper;
+import com.scriptql.scriptqlapi.rest.mappers.request.UserRequestMapper;
+import com.scriptql.scriptqlapi.rest.mappers.response.UserResponseMapper;
 import com.scriptql.scriptqlapi.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -19,18 +21,27 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody @Valid UserMapper userMapper) {
-        return service.create(userMapper);
+    public UserResponseMapper create(@RequestBody @Valid UserRequestMapper mapper) {
+        var user = service.create(mapper);
+
+        return UserResponseMapper.fromUser(user);
     }
 
     @GetMapping
-    public List<User> findAll() {
-        return service.findAll();
+    public List<UserResponseMapper> findAll() {
+        var users = service.findAll();
+
+        return users
+                .stream()
+                .map(UserResponseMapper::fromUser)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("{id}")
-    public User findById(@PathVariable long id) {
-        return service.findById(id);
+    public UserResponseMapper findById(@PathVariable long id) {
+        var user = service.findById(id);
+
+        return UserResponseMapper.fromUser(user);
     }
 
     @DeleteMapping("{id}")

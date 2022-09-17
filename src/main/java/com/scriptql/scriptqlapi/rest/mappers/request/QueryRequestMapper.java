@@ -1,11 +1,11 @@
-package com.scriptql.scriptqlapi.rest.mappers;
+package com.scriptql.scriptqlapi.rest.mappers.request;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class QueryMapper {
+public class QueryRequestMapper {
     @NotEmpty
     private String query;
     private String description;

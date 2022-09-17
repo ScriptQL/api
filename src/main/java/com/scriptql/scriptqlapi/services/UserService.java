@@ -3,7 +3,7 @@ package com.scriptql.scriptqlapi.services;
 import com.scriptql.scriptqlapi.domain.entities.User;
 import com.scriptql.scriptqlapi.domain.repositories.UserRepository;
 import com.scriptql.scriptqlapi.rest.exceptions.UserNotFoundException;
-import com.scriptql.scriptqlapi.rest.mappers.UserMapper;
+import com.scriptql.scriptqlapi.rest.mappers.request.UserRequestMapper;
 import com.scriptql.scriptqlapi.utils.Snowflake;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,13 +18,13 @@ public class UserService {
     private UserRepository repository;
     private Snowflake snowflake;
 
-    public User create(UserMapper userMapper) {
+    public User create(UserRequestMapper userRequestMapper) {
         var user = new User();
         var instant = Instant.now().getEpochSecond();
 
         user.setId(snowflake.next());
-        user.setName(userMapper.getName());
-        user.setEmail(userMapper.getEmail());
+        user.setName(userRequestMapper.getName());
+        user.setEmail(userRequestMapper.getEmail());
         user.setCreatedAt(instant);
         user.setUpdatedAt(instant);
 

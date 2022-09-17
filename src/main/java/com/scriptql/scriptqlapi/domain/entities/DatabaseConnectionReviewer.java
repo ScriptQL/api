@@ -1,6 +1,5 @@
 package com.scriptql.scriptqlapi.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,12 +12,11 @@ public class DatabaseConnectionReviewer {
     @Id
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "database_connection_id", nullable = false)
-    @JsonBackReference
     private DatabaseConnection databaseConnection;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 }

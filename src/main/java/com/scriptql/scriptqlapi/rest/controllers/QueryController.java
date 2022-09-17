@@ -1,6 +1,6 @@
 package com.scriptql.scriptqlapi.rest.controllers;
 
-import com.scriptql.scriptqlapi.rest.mappers.QueryMapper;
+import com.scriptql.scriptqlapi.rest.mappers.request.QueryRequestMapper;
 import com.scriptql.scriptqlapi.domain.entities.Query;
 import com.scriptql.scriptqlapi.services.QueryService;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class QueryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Query create(@RequestBody @Valid QueryMapper mapper) {
+    public Query create(@RequestBody @Valid QueryRequestMapper mapper) {
         return this.service.create(mapper);
     }
 }

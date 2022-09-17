@@ -2,7 +2,7 @@ package com.scriptql.scriptqlapi.services;
 
 import com.scriptql.scriptqlapi.domain.entities.QueryReview;
 import com.scriptql.scriptqlapi.domain.repositories.*;
-import com.scriptql.scriptqlapi.rest.mappers.QueryMapper;
+import com.scriptql.scriptqlapi.rest.mappers.request.QueryRequestMapper;
 import com.scriptql.scriptqlapi.domain.entities.Query;
 import com.scriptql.scriptqlapi.domain.enums.QueryStatus;
 import com.scriptql.scriptqlapi.rest.exceptions.DatabaseConnectionNotFoundException;
@@ -25,7 +25,7 @@ public class QueryService {
     private UserRepository userRepository;
     private Snowflake snowflake;
 
-    public Query create(QueryMapper mapper) {
+    public Query create(QueryRequestMapper mapper) {
         var databaseConnection = databaseConnectionRepository
                 .findById(mapper.getDatabaseConnectionId())
                 .orElseThrow(DatabaseConnectionNotFoundException::new);

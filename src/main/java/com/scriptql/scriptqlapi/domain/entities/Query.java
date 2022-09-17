@@ -1,6 +1,5 @@
 package com.scriptql.scriptqlapi.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.scriptql.scriptqlapi.domain.enums.QueryStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +16,11 @@ public class Query {
     @Id
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "database_id", nullable = false)
     private DatabaseConnection database;
 

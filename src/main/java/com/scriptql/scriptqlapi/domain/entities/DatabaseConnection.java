@@ -1,6 +1,5 @@
 package com.scriptql.scriptqlapi.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.scriptql.scriptqlapi.domain.enums.DatabaseDriver;
 import lombok.*;
 
@@ -17,25 +16,31 @@ public class DatabaseConnection {
     @Id
     private long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String host;
 
+    @Column(nullable = false)
     private String database;
 
+    @Column(nullable = false)
     private String username;
 
-    @JsonIgnore
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private int port;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private long createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private long updatedAt;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private DatabaseDriver driver;
 

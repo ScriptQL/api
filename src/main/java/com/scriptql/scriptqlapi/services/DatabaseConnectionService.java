@@ -1,6 +1,6 @@
 package com.scriptql.scriptqlapi.services;
 
-import com.scriptql.scriptqlapi.rest.mappers.DatabaseConnectionMapper;
+import com.scriptql.scriptqlapi.rest.mappers.request.DatabaseConnectionRequestMapper;
 import com.scriptql.scriptqlapi.domain.entities.DatabaseConnection;
 import com.scriptql.scriptqlapi.domain.entities.DatabaseConnectionReviewer;
 import com.scriptql.scriptqlapi.domain.entities.Role;
@@ -29,9 +29,9 @@ public class DatabaseConnectionService {
     private Snowflake snowflake;
 
     @Transactional
-    public DatabaseConnection create(DatabaseConnectionMapper databaseConnectionMapper) {
+    public DatabaseConnection create(DatabaseConnectionRequestMapper databaseConnectionRequestMapper) {
         var instant = Instant.now().getEpochSecond();
-        var databaseConnection = buildDatabaseConnectionFromMapper(databaseConnectionMapper);
+        var databaseConnection = databaseConnectionRequestMapper.buildDatabaseConnection();
 
         databaseConnection.setId(snowflake.next());
         databaseConnection.setCreatedAt(instant);
@@ -39,7 +39,7 @@ public class DatabaseConnectionService {
 
         var reviewers = getDatabaseConnectionReviewers(
                 databaseConnection,
-                databaseConnectionMapper.getRoles()
+                databaseConnectionRequestMapper.getRoles()
         );
 
         repository.save(databaseConnection);
@@ -83,24 +83,15 @@ public class DatabaseConnectionService {
     }
 
     public DatabaseConnection findById(long id) {
-        var databaseConnection = repository.findById(id);
-
-        if (databaseConnection.isPresent()) {
-            var dbConn = databaseConnection.get();
-            var reviewers = databaseConnectionReviewerRepository.
-                    findDatabaseConnectionReviewerByDatabaseConnectionId(dbConn.getId());
-
-            dbConn.setDatabaseConnectionReviewers(reviewers);
-            return dbConn;
-        }
-
-        throw new DatabaseConnectionNotFoundException();
+        return repository
+                .findByIdAndFetchDatabaseConnectionReviewersEagerly(id)
+                .orElseThrow(DatabaseConnectionNotFoundException::new);
     }
 
     @Transactional
-    public void update(long id, DatabaseConnectionMapper databaseConnectionPayload) {
+    public void update(long id, DatabaseConnectionRequestMapper databaseConnectionPayload) {
         var databaseConnection = findById(id);
-        var newDatabaseConnection = buildDatabaseConnectionFromMapper(databaseConnectionPayload);
+        var newDatabaseConnection = databaseConnectionPayload.buildDatabaseConnection();
         newDatabaseConnection.setId(databaseConnection.getId());
         newDatabaseConnection.setUpdatedAt(Instant.now().getEpochSecond());
         newDatabaseConnection.setCreatedAt(databaseConnection.getCreatedAt());
@@ -121,21 +112,10 @@ public class DatabaseConnectionService {
     }
 
     public void delete(long id) {
-        var databaseConnection = findById(id);
+        var databaseConnection = repository
+                .findById(id)
+                .orElseThrow(DatabaseConnectionNotFoundException::new);
+
         repository.delete(databaseConnection);
-    }
-
-    private DatabaseConnection buildDatabaseConnectionFromMapper(DatabaseConnectionMapper databaseConnectionMapper) {
-        var databaseConnection = new DatabaseConnection();
-
-        databaseConnection.setName(databaseConnectionMapper.getName());
-        databaseConnection.setDatabase(databaseConnectionMapper.getDatabase());
-        databaseConnection.setUsername(databaseConnectionMapper.getUsername());
-        databaseConnection.setHost(databaseConnectionMapper.getHost());
-        databaseConnection.setPassword(databaseConnectionMapper.getPassword());
-        databaseConnection.setPort(databaseConnectionMapper.getPort());
-        databaseConnection.setDriver(databaseConnectionMapper.getDriver());
-
-        return databaseConnection;
     }
 }

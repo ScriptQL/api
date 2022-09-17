@@ -3,17 +3,15 @@ package com.scriptql.scriptqlapi.domain.entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 
+@Data
 @Entity
 @Table(name = "roles")
-@Data
 public class Role {
 
     @Id
     private long id;
 
-    @NotEmpty
     @Column(unique = true)
     private String name;
 
