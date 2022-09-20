@@ -19,12 +19,17 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+
+    implementation('org.jetbrains:annotations:23.0.0')
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
+    implementation(group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3')
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
