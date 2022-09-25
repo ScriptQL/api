@@ -1,31 +1,51 @@
 package com.scriptql.api.services;
 
-import com.scriptql.api.domain.entities.NotificationEvent;
-import lombok.extern.slf4j.Slf4j;
+import com.scriptql.api.domain.NotificationEvent;
+import com.scriptql.api.domain.entities.DatabaseConnection;
+import com.scriptql.api.domain.entities.Query;
+import com.scriptql.api.domain.entities.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Slf4j
 @Service
 public class NotificationService {
 
-    public void sendMessage(NotificationEvent notificationEvent) {
+    @Value("${scriptql.apprise}")
+    private String appriseUrl;
 
-        RestTemplate restTemplate = new RestTemplate();
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8000/notify/apprise");
+    @Value("${scriptql.front}")
+    private String frontUrl;
 
-        HttpEntity<?> entity = new HttpEntity<>(notificationEvent);
-
-        HttpEntity<String> response = restTemplate.exchange(
+    public ResponseEntity<String> sendMessage(Query query) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(appriseUrl);
+        NotificationEvent event = new NotificationEvent(getMessage(query));
+        return new RestTemplate().exchange(
                 builder.toUriString(),
                 HttpMethod.POST,
-                entity,
+                new HttpEntity<>(event),
                 String.class);
+    }
 
-        log.debug("teste");
+    private String getMessage(Query query) {
+        User user = query.getRequester();
+        DatabaseConnection connection = query.getConnection();
+        String url = frontUrl.concat("info/").concat(query.getId().toString());
+        return String.format("""
+                **Review Task #%d**
+                \s%s
+                **name** : *%s*
+                **email** : *%s*
+                **database** : *%s*
+                **driver** : *%s*
+                ```SQL
+                %s```
+                **More info :** *%s*
+                """, query.getId(), query.getDescription(), user.getName(), user.getEmail(), connection.getName(), connection.getDriver().name(), query.getQuery(), url);
     }
 
 }

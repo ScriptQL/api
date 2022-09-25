@@ -9,3 +9,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+scriptql:
+  apprise: 'http://localhost:8000/notify/apprise'
+  front: 'http://localhost:1234/'
