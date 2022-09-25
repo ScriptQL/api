@@ -1,5 +1,6 @@
 package com.scriptql.api.services;
 
+import com.scriptql.api.advice.security.Session;
 import com.scriptql.api.domain.PagedResponse;
 import com.scriptql.api.domain.Paginator;
 import com.scriptql.api.domain.SpecBuilder;
@@ -59,7 +60,7 @@ public class QueryService {
         query.setQuery(request.getQuery());
         query.setDescription(request.getDescription());
         query.setConnection(connection);
-        query.setRequester(null);
+        query.setRequester(Session.getUser());
         query.setStatus(QueryStatus.WAITING_REVIEW);
 
         List<Review> reviews = new ArrayList<>();

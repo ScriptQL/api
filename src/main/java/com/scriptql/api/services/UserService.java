@@ -1,5 +1,6 @@
 package com.scriptql.api.services;
 
+import com.scriptql.api.advice.security.Session;
 import com.scriptql.api.domain.PagedResponse;
 import com.scriptql.api.domain.Paginator;
 import com.scriptql.api.domain.SpecBuilder;
@@ -7,6 +8,7 @@ import com.scriptql.api.domain.SpecMatcher;
 import com.scriptql.api.domain.entities.Role;
 import com.scriptql.api.domain.entities.User;
 import com.scriptql.api.domain.entities.UserRole;
+import com.scriptql.api.domain.errors.SecurityError;
 import com.scriptql.api.domain.errors.UserError;
 import com.scriptql.api.domain.repositories.RoleRepository;
 import com.scriptql.api.domain.repositories.UserRepository;
@@ -46,17 +48,12 @@ public class UserService {
                 .orElseThrow(() -> new UserError("Unknown user"));
     }
 
-    public @NotNull User create(User request) {
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setCreatedAt(System.currentTimeMillis());
-        user.setUpdatedAt(System.currentTimeMillis());
-        return this.repository.save(user);
-    }
-
-    public User edit(long id, EditUserRequest request) {
+    public User edit(long id, EditUserRequest request) throws SecurityError {
         User user = this.findById(id);
+
+        if (!Session.getUser().equals(user)) {
+            throw new SecurityError(403, "Unauthorized");
+        }
 
         if (request.getName() != null) {
             user.setName(request.getName());

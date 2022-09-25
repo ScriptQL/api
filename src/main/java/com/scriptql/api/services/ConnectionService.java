@@ -12,7 +12,6 @@ import com.scriptql.api.domain.repositories.ConnectionRepository;
 import com.scriptql.api.domain.repositories.DatabaseReviewerRepository;
 import com.scriptql.api.domain.repositories.RoleRepository;
 import com.scriptql.api.domain.request.CreateConnectionRequest;
-import com.scriptql.api.rest.exceptions.DatabaseConnectionNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -113,14 +112,6 @@ public class ConnectionService {
         }
 
         return this.repository.save(connection);
-    }
-
-    public void delete(long id) {
-        var databaseConnection = repository
-                .findById(id)
-                .orElseThrow(DatabaseConnectionNotFoundException::new);
-
-        repository.delete(databaseConnection);
     }
 
     public @NotNull List<Role> getReviewers(long id) {

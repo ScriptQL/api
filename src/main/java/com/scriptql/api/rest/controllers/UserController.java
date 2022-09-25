@@ -4,9 +4,9 @@ import com.scriptql.api.domain.PagedResponse;
 import com.scriptql.api.domain.Paginator;
 import com.scriptql.api.domain.entities.Role;
 import com.scriptql.api.domain.entities.User;
+import com.scriptql.api.domain.errors.SecurityError;
 import com.scriptql.api.domain.request.EditUserRequest;
 import com.scriptql.api.services.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,14 +31,8 @@ public class UserController {
         return this.service.findById(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody User request) {
-        return this.service.create(request);
-    }
-
     @PatchMapping("/{id:\\d+}")
-    public User edit(@PathVariable("id") long id, @RequestBody EditUserRequest request) {
+    public User edit(@PathVariable("id") long id, @RequestBody EditUserRequest request) throws SecurityError {
         return this.service.edit(id, request);
     }
 
