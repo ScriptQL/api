@@ -15,11 +15,9 @@ public class User extends BaseEntity {
 
     private String name;
     private String email;
+    private String password;
 
-    @Column(name = "created_at")
-    private Long createdAt;
-
-    @Column(name = "updated_at")
-    private Long updatedAt;
+    @Column(name = "last_security_event")
+    private Long lastSecurityEvent;
 
 }
