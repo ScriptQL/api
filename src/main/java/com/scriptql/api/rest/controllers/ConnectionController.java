@@ -43,12 +43,6 @@ public class ConnectionController {
         return this.service.edit(id, request);
     }
 
-    @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
-        this.service.delete(id);
-    }
-
     @GetMapping("/{id:\\d+}/reviewers")
     public List<Role> getReviewers(@PathVariable("id") long id) {
         return this.service.getReviewers(id);
