@@ -36,16 +36,16 @@ public class NotificationService {
         DatabaseConnection connection = query.getConnection();
         String url = frontUrl.concat("info/").concat(query.getId().toString());
         return String.format("""
-                **Review Task #%d**
+                **Query Review Notification**
                 \s%s
-                **name** : *%s*
-                **email** : *%s*
-                **database** : *%s*
-                **driver** : *%s*
+                **Name** : *%s*
+                **E-mail** : *%s*
+                **Database** : *%s*
+                **Driver** : *%s*
                 ```SQL
                 %s```
-                **More info :** *%s*
-                """, query.getId(), query.getDescription(), user.getName(), user.getEmail(), connection.getName(), connection.getDriver().name(), query.getQuery(), url);
+                **See full details :** *%s*
+                """, query.getDescription(), user.getName(), user.getEmail(), connection.getName(), connection.getDriver().name(), query.getQuery(), url);
     }
 
 }

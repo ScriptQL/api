@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: 'jdbc:postgresql://100.118.68.72:5432/scriptql'
+    url: 'jdbc:postgresql://localhost:5432/scriptql'
     password: 'postgres'
     username: 'postgres'
     driver-class-name: org.postgresql.Driver

@@ -20,8 +20,8 @@ public class NotificationServiceTest {
     @Test
     public void deveEnviarNotificacao() {
         User user = new User();
-        user.setName("Elma Maria Pinto");
-        user.setEmail("emla@da.com");
+        user.setName("Elma Maria");
+        user.setEmail("elma_maria@scriptql.com");
 
         DatabaseConnection connection = new DatabaseConnection();
         connection.setDriver(DatabaseDriver.POSTGRES);
@@ -31,12 +31,11 @@ public class NotificationServiceTest {
         query.setId(123L);
         query.setRequester(user);
         query.setConnection(connection);
-        query.setDescription("Caballo Homosexual De Las Montañas");
-        query.setQuery("select id, nome, valor from tabela_de_teste \n" +
-                "where id = 123 and nome != \"Teste Name\"");
+        query.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        query.setQuery("select id, nome, valor from tabela_de_teste \n where id = 123 and nome != \"Teste Name\"");
 
         var response = notificationService.sendMessage(query);
-        Assertions.assertEquals(response.getStatusCodeValue() , 200);
+        Assertions.assertEquals(response.getStatusCodeValue(), 200);
     }
 
 }
