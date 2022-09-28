@@ -27,6 +27,7 @@ public class QueryService {
     private final ConnectionService connections;
     private final UserRoleRepository roles;
     private final ReviewRepository reviews;
+    private final NotificationService notification;
 
     private final SpecBuilder<Query> builder = new SpecBuilder<>();
 
@@ -34,11 +35,13 @@ public class QueryService {
             QueryRepository repository,
             ConnectionService connections,
             UserRoleRepository roles,
-            ReviewRepository reviews) {
+            ReviewRepository reviews,
+            NotificationService notification) {
         this.repository = repository;
         this.connections = connections;
         this.roles = roles;
         this.reviews = reviews;
+        this.notification = notification;
         this.builder.addMatcher("database.name", SpecMatcher.SEARCH);
         this.builder.addMatcher("description", SpecMatcher.SEARCH);
     }
@@ -82,6 +85,7 @@ public class QueryService {
         }
         query = this.repository.save(query);
         this.reviews.saveAll(reviews);
+        notification.sendMessage(query);
         return query;
     }
 
