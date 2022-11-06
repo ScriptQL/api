@@ -44,7 +44,13 @@ public class SecurityService {
             return true;
         }
         long created = Snowflake.getInstance().toInstant(token.getId()).toEpochSecond() * 1000;
-        return token.getUser().getLastSecurityEvent() > created;
+
+        Long last = token.getUser().getLastSecurityEvent();
+        if (last == null) {
+            return false;
+        } else {
+            return last > created;
+        }
     }
 
     private long getExpiration() {

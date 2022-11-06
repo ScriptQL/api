@@ -1,5 +1,6 @@
 package com.scriptql.api.rest.controllers;
 
+import com.scriptql.api.advice.security.Session;
 import com.scriptql.api.domain.PagedResponse;
 import com.scriptql.api.domain.Paginator;
 import com.scriptql.api.domain.entities.Role;
@@ -24,6 +25,11 @@ public class UserController {
     @GetMapping
     public PagedResponse<User> search(User request, Paginator paginator) {
         return this.service.search(request, paginator);
+    }
+
+    @GetMapping("/@me")
+    public User findSelf() {
+        return Session.getUser();
     }
 
     @GetMapping("/{id:\\d+}")
