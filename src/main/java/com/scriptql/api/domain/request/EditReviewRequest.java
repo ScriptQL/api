@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class EditReviewRequest {
 
+    private long query;
     private String comment;
     private boolean accepted;
 

@@ -27,9 +27,9 @@ public class ReviewController {
         return this.service.findById(id);
     }
 
-    @PatchMapping("/{id:\\d+}")
-    public Review edit(@PathVariable("id") long id, @RequestBody EditReviewRequest request) {
-        return this.service.edit(id, request);
+    @PostMapping
+    public Review create(@RequestBody EditReviewRequest request) {
+        return this.service.create(request);
     }
 
 }

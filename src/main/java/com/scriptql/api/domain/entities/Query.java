@@ -28,6 +28,9 @@ public class Query extends BaseEntity {
     @Nullable
     private String description;
 
+    @Nullable
+    private String title;
+
     @NotNull
     private QueryStatus status;
 

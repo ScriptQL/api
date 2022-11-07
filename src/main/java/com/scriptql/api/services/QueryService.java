@@ -10,6 +10,7 @@ import com.scriptql.api.domain.enums.QueryStatus;
 import com.scriptql.api.domain.errors.UserError;
 import com.scriptql.api.domain.repositories.QueryRepository;
 import com.scriptql.api.domain.repositories.ReviewRepository;
+import com.scriptql.api.domain.repositories.RoleRepository;
 import com.scriptql.api.domain.repositories.UserRoleRepository;
 import com.scriptql.api.domain.request.CreateQueryRequest;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +26,8 @@ public class QueryService {
 
     private final QueryRepository repository;
     private final ConnectionService connections;
-    private final UserRoleRepository roles;
+    private final UserRoleRepository userRoles;
+    private final RoleRepository roles;
     private final ReviewRepository reviews;
     private final NotificationService notification;
 
@@ -34,11 +36,12 @@ public class QueryService {
     public QueryService(
             QueryRepository repository,
             ConnectionService connections,
-            UserRoleRepository roles,
-            ReviewRepository reviews,
+            UserRoleRepository userRoles,
+            RoleRepository roles, ReviewRepository reviews,
             NotificationService notification) {
         this.repository = repository;
         this.connections = connections;
+        this.userRoles = userRoles;
         this.roles = roles;
         this.reviews = reviews;
         this.notification = notification;
@@ -60,6 +63,7 @@ public class QueryService {
         DatabaseConnection connection = this.connections.findById(request.getConnection());
 
         Query query = new Query();
+        query.setTitle(request.getTitle());
         query.setQuery(request.getQuery());
         query.setDescription(request.getDescription());
         query.setConnection(connection);
@@ -67,22 +71,21 @@ public class QueryService {
         query.setStatus(QueryStatus.WAITING_REVIEW);
 
         List<Review> reviews = new ArrayList<>();
-        List<Role> roles = this.connections.getReviewers(connection.getId());
-        for (Role role : roles) {
-            List<User> users = this.roles.findAllByRole(role).stream()
+        for (Long id : request.getReviewers()) {
+            Role role = this.roles.findById(id)
+                    .orElseThrow(() -> new UserError("Invalid role"));
+            List<User> users = this.userRoles.findAllByRole(role).stream()
                     .map(UserRole::getUser)
                     .toList();
             if (users.isEmpty()) {
                 throw new UserError("No users for review under " + role.getName());
             }
-            User user = users.get(new Random().nextInt(users.size()));
-
             Review review = new Review();
-            review.setUser(user);
-            review.setRole(role);
+            review.setUser(users.get(new Random().nextInt(users.size())));
             review.setQuery(query);
             reviews.add(review);
         }
+
         query = this.repository.save(query);
         this.reviews.saveAll(reviews);
         notification.sendMessage(query);

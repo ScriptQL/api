@@ -22,9 +22,6 @@ public class Review extends BaseEntity {
     @ManyToOne
     private User user;
 
-    @ManyToOne
-    private Role role;
-
     @Nullable
     private String comment;
 

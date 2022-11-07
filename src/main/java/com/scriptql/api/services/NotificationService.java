@@ -7,7 +7,6 @@ import com.scriptql.api.domain.entities.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,20 +14,22 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class NotificationService {
 
-    @Value("${scriptql.apprise}")
+    @Value("${scriptql.apprise.enabled}")
+    private boolean enabled;
+
+    @Value("${scriptql.apprise.url}")
     private String appriseUrl;
 
     @Value("${scriptql.front}")
     private String frontUrl;
 
-    public ResponseEntity<String> sendMessage(Query query) {
+    public void sendMessage(Query query) {
+        if (!this.enabled) {
+            return;
+        }
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(appriseUrl);
         NotificationEvent event = new NotificationEvent(getMessage(query));
-        return new RestTemplate().exchange(
-                builder.toUriString(),
-                HttpMethod.POST,
-                new HttpEntity<>(event),
-                String.class);
+        new RestTemplate().exchange(builder.toUriString(), HttpMethod.POST, new HttpEntity<>(event), String.class);
     }
 
     private String getMessage(Query query) {
