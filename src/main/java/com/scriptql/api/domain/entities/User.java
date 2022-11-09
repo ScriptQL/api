@@ -1,11 +1,10 @@
 package com.scriptql.api.domain.entities;
 
+import com.scriptql.api.domain.enums.UserGroup;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -16,6 +15,9 @@ public class User extends BaseEntity {
     private String name;
     private String email;
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private UserGroup access;
 
     @Column(name = "last_security_event")
     private Long lastSecurityEvent;
