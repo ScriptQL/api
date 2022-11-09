@@ -3,9 +3,11 @@ package com.scriptql.api.rest.controllers;
 import com.scriptql.api.domain.PagedResponse;
 import com.scriptql.api.domain.Paginator;
 import com.scriptql.api.domain.entities.DatabaseConnection;
+import com.scriptql.api.domain.entities.Reviewer;
 import com.scriptql.api.domain.entities.Role;
 import com.scriptql.api.domain.request.CreateConnectionRequest;
 import com.scriptql.api.services.ConnectionService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +48,16 @@ public class ConnectionController {
     @GetMapping("/{id:\\d+}/reviewers")
     public List<Role> getReviewers(@PathVariable("id") long id) {
         return this.service.getReviewers(id);
+    }
+
+    @PostMapping("/{id:\\d+}/reviewers")
+    public @NotNull Reviewer getReviewers(@PathVariable("id") long id, @RequestBody Role role) {
+        return this.service.addReviewer(id, role);
+    }
+
+    @DeleteMapping("/{id:\\d+}/reviewers/{role:\\d+}")
+    public void delReviewer(@PathVariable("id") long id, @PathVariable("role") long roleId) {
+        this.service.delReviewer(id, roleId);
     }
 
 }

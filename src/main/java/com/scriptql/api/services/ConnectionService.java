@@ -121,4 +121,27 @@ public class ConnectionService {
                 .toList();
     }
 
+    public @NotNull Reviewer addReviewer(long id, Role request) {
+        DatabaseConnection connection = this.findById(id);
+        Role role = this.roles.findById(request.getId())
+                .orElseThrow(() -> new UserError("Invalid role"));
+        if (this.reviewers.findByRoleAndDatabaseConnection(role, connection)
+                .isPresent()) {
+            throw new UserError("This role is already registered as a reviewer");
+        }
+        Reviewer reviewer = new Reviewer();
+        reviewer.setDatabaseConnection(connection);
+        reviewer.setRole(role);
+        return this.reviewers.save(reviewer);
+    }
+
+    public void delReviewer(long id, long roleId) {
+        DatabaseConnection connection = this.findById(id);
+        Role role = this.roles.findById(roleId)
+                .orElseThrow(() -> new UserError("Invalid role"));
+        Reviewer reviewer = this.reviewers.findByRoleAndDatabaseConnection(role, connection)
+                .orElseThrow(() -> new UserError("This role is not a reviewer"));
+        this.reviewers.delete(reviewer);
+    }
+
 }
