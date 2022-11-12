@@ -51,7 +51,7 @@ public class UserService {
     public User edit(long id, EditUserRequest request) throws SecurityError {
         User user = this.findById(id);
 
-        if (!Session.getUser().equals(user)) {
+        if (!Session.getUser().getId().equals(user.getId())) {
             throw new SecurityError(403, "Unauthorized");
         }
 
@@ -62,20 +62,11 @@ public class UserService {
             user.setEmail(request.getEmail());
         }
 
-        if (request.getRoles() != null) {
-            this.userRoles.deleteAllByUser(user);
-            List<UserRole> roles = this.roles.findAllById(request.getRoles()).stream().map(role -> {
-                UserRole mapping = new UserRole();
-                mapping.setRole(role);
-                mapping.setUser(user);
-                return mapping;
-            }).toList();
-            if (!roles.isEmpty()) {
-                this.userRoles.saveAll(roles);
-            }
+        if (request.getStatus() != null) {
+            user.setStatus(request.getStatus());
         }
 
-        return user;
+        return this.repository.save(user);
     }
 
     public @NotNull List<Role> getRoles(long id) {

@@ -12,5 +12,6 @@ public class EditUserRequest {
     private String name;
     private String email;
     private Set<Long> roles;
+    private String status;
 
 }

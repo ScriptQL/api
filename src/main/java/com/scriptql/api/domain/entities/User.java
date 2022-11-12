@@ -16,6 +16,8 @@ public class User extends BaseEntity {
     private String email;
     private String password;
 
+    private String status;
+
     @Enumerated(EnumType.STRING)
     private UserGroup access;
 
