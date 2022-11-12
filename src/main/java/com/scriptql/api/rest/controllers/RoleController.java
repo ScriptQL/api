@@ -4,6 +4,7 @@ import com.scriptql.api.domain.PagedResponse;
 import com.scriptql.api.domain.Paginator;
 import com.scriptql.api.domain.entities.Role;
 import com.scriptql.api.domain.entities.User;
+import com.scriptql.api.domain.entities.UserRole;
 import com.scriptql.api.services.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -45,4 +46,13 @@ public class RoleController {
         return this.service.findUsers(id, paginator);
     }
 
+    @PostMapping("/{id:\\d+}/users")
+    public UserRole createUserRole(@PathVariable("id") long id, @RequestBody User request) {
+        return this.service.createUserRole(id, request);
+    }
+
+    @DeleteMapping("/{id:\\d+}/users/{userId:\\d+}")
+    public void deleteUserRole(@PathVariable("id") long id, @PathVariable("userId") long userId) {
+        this.service.deleteUserRole(id, userId);
+    }
 }

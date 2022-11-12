@@ -34,8 +34,7 @@ public class NotificationServiceTest {
         query.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         query.setQuery("select id, nome, valor from tabela_de_teste \n where id = 123 and nome != \"Teste Name\"");
 
-        var response = notificationService.sendMessage(query);
-        Assertions.assertEquals(response.getStatusCodeValue(), 200);
+        notificationService.sendMessage(query);
     }
 
 }

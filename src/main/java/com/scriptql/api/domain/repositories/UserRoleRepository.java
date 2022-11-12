@@ -20,4 +20,6 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long>, JpaSp
 
     void deleteAllByUser(User user);
 
+    void deleteUserRoleByRoleAndUser(Role role, User user);
+
 }
