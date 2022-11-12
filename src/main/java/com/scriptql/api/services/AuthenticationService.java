@@ -2,6 +2,7 @@ package com.scriptql.api.services;
 
 import com.scriptql.api.domain.entities.Token;
 import com.scriptql.api.domain.entities.User;
+import com.scriptql.api.domain.enums.UserGroup;
 import com.scriptql.api.domain.errors.SecurityError;
 import com.scriptql.api.domain.errors.UserError;
 import com.scriptql.api.domain.repositories.UserRepository;
@@ -46,6 +47,11 @@ public class AuthenticationService {
             throw new UserError("Email already in use");
         }
         User user = new User();
+        if (this.users.count() == 0 ) {
+            user.setAccess(UserGroup.ADMIN);
+        } else {
+            user.setAccess(UserGroup.USER);
+        }
         user.setEmail(request.getEmail());
         user.setName(request.getName());
         user.setPassword(this.bcrypt.encode(request.getPassword()));

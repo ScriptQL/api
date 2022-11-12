@@ -34,7 +34,4 @@ public class CreateConnectionRequest {
     @NotNull
     private DatabaseDriver driver;
 
-    @NotEmpty
-    private Set<Long> reviewers = new HashSet<>();
-
 }

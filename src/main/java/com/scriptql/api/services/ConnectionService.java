@@ -61,19 +61,8 @@ public class ConnectionService {
         connection.setPassword(request.getPassword());
         connection.setCreatedAt(System.currentTimeMillis());
         connection.setUpdatedAt(System.currentTimeMillis());
-        this.repository.save(connection);
 
-        List<Reviewer> reviewers = this.roles.findAllById(request.getReviewers())
-                .stream()
-                .map(role -> {
-                    Reviewer reviewer = new Reviewer();
-                    reviewer.setDatabaseConnection(connection);
-                    reviewer.setRole(role);
-                    return reviewer;
-                }).toList();
-        this.reviewers.saveAll(reviewers);
-
-        return connection;
+        return this.repository.save(connection);
     }
 
     @Transactional
@@ -97,18 +86,6 @@ public class ConnectionService {
         }
         if (request.getDatabase() != null) {
             connection.setDatabase(request.getDatabase());
-        }
-        if (request.getReviewers() != null) {
-            this.reviewers.deleteByDatabaseConnection(connection);
-            List<Reviewer> reviewers = this.roles.findAllById(request.getReviewers())
-                    .stream()
-                    .map(role -> {
-                        Reviewer reviewer = new Reviewer();
-                        reviewer.setDatabaseConnection(connection);
-                        reviewer.setRole(role);
-                        return reviewer;
-                    }).toList();
-            this.reviewers.saveAll(reviewers);
         }
 
         return this.repository.save(connection);

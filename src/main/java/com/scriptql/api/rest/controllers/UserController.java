@@ -6,6 +6,7 @@ import com.scriptql.api.domain.Paginator;
 import com.scriptql.api.domain.entities.Role;
 import com.scriptql.api.domain.entities.User;
 import com.scriptql.api.domain.errors.SecurityError;
+import com.scriptql.api.domain.request.EditUserPassword;
 import com.scriptql.api.domain.request.EditUserRequest;
 import com.scriptql.api.services.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,11 @@ public class UserController {
     @GetMapping("/{id:\\d+}/roles")
     public List<Role> getRoles(@PathVariable("id") long id) {
         return this.service.getRoles(id);
+    }
+
+    @PatchMapping("/newPassword")
+    public User editPassword(@RequestBody EditUserPassword request) throws SecurityError {
+        return this.service.newPassword(request);
     }
 
 }
