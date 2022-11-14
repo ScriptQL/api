@@ -52,6 +52,7 @@ public class AuthenticationService {
         } else {
             user.setAccess(UserGroup.USER);
         }
+        user.setStatus("Ativo");
         user.setEmail(request.getEmail());
         user.setName(request.getName());
         user.setPassword(this.bcrypt.encode(request.getPassword()));
