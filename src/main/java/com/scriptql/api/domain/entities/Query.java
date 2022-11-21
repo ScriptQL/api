@@ -39,6 +39,9 @@ public class Query extends BaseEntity {
     private byte[] result;
 
     @Nullable
+    private String error;
+
+    @Nullable
     @JsonProperty("execution_date")
     @Column(name = "execution_date")
     private Long executionDate;

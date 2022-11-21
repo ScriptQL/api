@@ -7,6 +7,7 @@ import com.scriptql.api.domain.entities.Review;
 import com.scriptql.api.domain.request.CreateQueryRequest;
 import com.scriptql.api.services.QueryService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,6 +42,16 @@ public class QueryController {
     @GetMapping("/{id:\\d+}/reviews")
     public List<Review> getReviews(@PathVariable("id") long id) {
         return this.service.getReviews(id);
+    }
+
+    @PostMapping("/{id:\\d+}/execute")
+    public void execute(@PathVariable("id") long id) {
+        this.service.execute(id);
+    }
+
+    @GetMapping("/{id:\\d+}/download")
+    public ResponseEntity<byte[]> download(@PathVariable("id") long id) {
+        return this.service.download(id);
     }
 
 }
